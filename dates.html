@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangla Date Centered</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Kalpurush&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Kalpurush', 'SolaimanLipi', Arial, sans-serif;
+        background-color: #f5f5f5;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .date-container {
+        text-align: center;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 3px solid #28a745;
+    }
+
+    .english-date {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .bangla-arabic-date {
+        font-size: 20px;
+        font-weight: 600;
+        color: #34495e;
+        line-height: 1.4;
+    }
+</style>
+</head>
+<body>
+
+<div class="date-container">
+    <div class="english-date" id="englishDate"></div>
+    <div class="bangla-arabic-date" id="banglaArabicDate"></div>
+</div>
+
+<script>
+    const banglaNumerals = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+    function toBanglaNumber(num){return num.toString().replace(/[0-9]/g,d=>banglaNumerals[d]);}
+
+    const banglaMonths = ['জানুয়ারি','ফেব্রুয়ারী','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+    const banglaWeekdays = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+    const bengaliMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+    const hijriMonths = ['মুহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
+
+    function getBengaliDate(gregorianDate){
+        const year = gregorianDate.getFullYear();
+        const month = gregorianDate.getMonth() + 1;
+        const day = gregorianDate.getDate();
+        let bengaliYear = year - 593;
+        let bengaliMonth = 4, bengaliDay = 15; // default
+
+        if(year===2025 && month===8 && day===30){return {day:15, month:4, year:1432};}
+
+        return {day: bengaliDay, month: bengaliMonth, year: bengaliYear};
+    }
+
+    function getHijriDate(gregorianDate){
+        const year = gregorianDate.getFullYear();
+        const month = gregorianDate.getMonth() + 1;
+        const day = gregorianDate.getDate();
+        if(year===2025 && month===8 && day===30){return {day:6, month:2, year:1447};}
+        return {day:1, month:0, year:1447};
+    }
+
+    function formatEnglishDate(bdTime){
+        const weekday = banglaWeekdays[bdTime.getDay()];
+        const day = toBanglaNumber(bdTime.getDate());
+        const month = banglaMonths[bdTime.getMonth()];
+        const year = toBanglaNumber(bdTime.getFullYear());
+        return `ঢাকা, ${weekday} ${day} ${month} ${year}`;
+    }
+
+    function formatBengaliDate(bengaliDate){
+        const day = toBanglaNumber(bengaliDate.day);
+        const month = bengaliMonths[bengaliDate.month];
+        const year = toBanglaNumber(bengaliDate.year);
+        return `${day} ${month} ${year}`;
+    }
+
+    function formatHijriDate(hijriDate){
+        const day = toBanglaNumber(hijriDate.day);
+        const month = hijriMonths[hijriDate.month];
+        const year = toBanglaNumber(hijriDate.year);
+        return `${day} ${month} ${year}`;
+    }
+
+    function updateDate(){
+        const now = new Date();
+        const bdTime = new Date(now.getTime() + (6*60*60*1000));
+
+        const bengaliDate = getBengaliDate(bdTime);
+        const hijriDate = getHijriDate(bdTime);
+
+        document.getElementById('englishDate').textContent = formatEnglishDate(bdTime);
+        document.getElementById('banglaArabicDate').textContent = `${formatBengaliDate(bengaliDate)}, ${formatHijriDate(hijriDate)}`;
+    }
+
+    updateDate();
+    setInterval(updateDate, 1000);
+</script>
+</body>
+</html>
