@@ -34,7 +34,7 @@ All dates **auto-update daily** at Bangladesh time (GMT+6).
 1. Clone or download the repository:
 
 ```bash
-git clone https://github.com/yourusername/bangla-date-canvas.git
+git clone https://github.com/khandaker-atik/bangla-date-canvas.git
 cd bangla-date-canvas
 ```
 
